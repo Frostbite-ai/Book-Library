@@ -1,30 +1,44 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:wght@800&display=swap");
+:root {
+  --white: #fffbfb;
+  --grey: #f0eef1;
+  --black: #050505;
+  --green: #9fff9c;
+  --pink: #ff9c9c;
+  --shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
 
 body {
-  background: #f0eef1;
+  background: var(--grey);
+  color: var(--black);
   margin: 0px;
   padding: 0px;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 17px;
+  word-wrap: break-word;
 }
 
 header {
-  background-color: #fffbfb;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 4px;
+  background-color: var(--white);
+  box-shadow: var(--shadow);
 }
 
 header > div {
   display: flex;
-  margin: 0 auto;
-  max-width: 1170px;
   justify-content: space-between;
   align-items: center;
+}
+
+.container {
+  max-width: 1170px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0 20px;
 }
 
-#navbar {
-  /* border: 10px solid; */
+nav {
   display: flex;
   gap: 20px;
 }
@@ -34,17 +48,27 @@ header > div {
   font-weight: 700;
 }
 
-.accountBtn {
-  font-weight: 500;
-  font-size: larger;
-  font-style: normal;
+.Btn {
+  font-size: 20px;
   border-radius: 10px;
-  height: 100%;
   border: none;
   padding: 12px 18px;
   transition: filter 0.2s ease-in-out;
   cursor: pointer;
-  word-wrap: break-word;
+}
+
+.Btn:hover {
+  filter: brightness(93%);
+}
+
+#Btn_addBook {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  font-weight: 600;
+  font-size: x-large;
+  background-color: var(--grey);
+  padding: 15px 20px;
+  transition: filter 0.15s ease-in-out;
 }
 
 #accountBtn_login {
@@ -59,35 +83,38 @@ header > div {
   display: none;
 }
 
-.login:hover {
-  filter: brightness(93%);
+/* grid card buttons */
+
+.Btn#submitBtn_addBook {
+  width: 100%;
+  background-color: var(--green);
 }
 
-section[class="addBook"] {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 130px;
+.Btn#submitBtn_readStatusChange[value="Read"] {
+  background-color: var(--green);
 }
 
-#addBook {
-  font-weight: 600;
-  background-color: transparent;
-  font-size: x-large;
-  font-style: normal;
-  background-color: #f0eef1;
+.Btn#submitBtn_readStatusChange {
+  background-color: var(--pink);
+}
+
+/* input:not([type="radio"]) { */
+input:not([type="radio"]):not([class="Btn"]) {
+  width: 100%;
+  height: 45px;
   border-radius: 10px;
+  font-size: large;
+  font-weight: 550;
+  padding-left: 10px;
   border: none;
-  padding: 10px 20px;
-  transition: filter 0.15s ease-in-out;
 }
-#addBook:hover {
-  animation: normal;
-  filter: brightness(93%);
+
+input:focus-visible {
+  outline: none;
 }
 
 .modal {
-  display: none;
+  display: none; /* Hidden by default */
   position: fixed;
   z-index: 1;
   left: 0;
@@ -99,9 +126,25 @@ section[class="addBook"] {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal.show {
+  display: flex;
+}
+
 .modalInside {
-  margin-top: 40px;
-  background-color: #f0eef1;
+  background-color: var(--grey);
   width: 280px;
   padding: 10px 20px;
   border: none;
@@ -109,6 +152,12 @@ section[class="addBook"] {
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: scale(0); /* Initial state */
+  transition: transform 0.2s ease-in-out;
+}
+
+.modal.show .modalInside {
+  transform: scale(1); /* Transformed state */
 }
 
 .modalInside#accountModal {
@@ -139,28 +188,12 @@ section[class="addBook"] {
 }
 
 #duplicateName {
-  display: none;
   color: red;
   font-size: large;
-  padding-top: 5px;
 }
 legend {
   font-weight: 700;
   font-size: 21px;
-}
-
-input:not([type="radio"]):not([class="submitBtn"]) {
-  width: 100%;
-  height: 35px;
-  border-radius: 7px;
-  font-size: large;
-  font-weight: 550;
-  padding: 6px 10px;
-  border: none;
-}
-
-input:focus-visible {
-  outline: none;
 }
 
 .radioSection {
@@ -202,43 +235,6 @@ input:focus-visible {
   filter: brightness(80%);
 }
 
-.submitBtn {
-  color: rgb(27, 27, 27);
-  width: 100%;
-  height: 50px;
-  border-radius: 7px;
-  font-size: 18px;
-  font-weight: 600;
-  padding: 6px 10px;
-  border: none;
-  word-wrap: break-word;
-  transition: filter 0.14s ease-in-out;
-  cursor: pointer;
-}
-
-.submitBtn:hover {
-  filter: brightness(93%);
-}
-
-.submitBtn#submitBtn_addBook {
-  background-color: #9fff9c;
-}
-
-.submitBtn#submitBtn_readStatusChange[value="Read"] {
-  background-color: #9fff9c;
-}
-
-.submitBtn#submitBtn_readStatusChange {
-  background-color: #ff9c9c;
-}
-
-section.grid {
-  padding: 20px;
-  max-width: 1170px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .grid-container {
   display: grid;
   gap: 40px;
@@ -248,8 +244,8 @@ section.grid {
 #gridCard {
   font-size: larger;
   font-weight: 500;
-  background-color: #fffbfb;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  background-color: var(--white);
+  box-shadow: var(--shadow);
   border-radius: 10px;
   padding: 20px;
   text-align: center;

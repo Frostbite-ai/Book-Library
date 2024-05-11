@@ -4,36 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book Library</title>
-    <script src="books.js" async></script>
-    <script src="account.js" type="module" defer></script>
+    <script src="books.js" type="module" defer></script>
+    <!-- <script src="firestore.js" type="module" defer></script> -->
     <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
     <header>
-      <div>
+      <div class="container">
         <h1 id="logo">The Library</h1>
         <nav id="navbar">
-          <button class="accountBtn" id="accountBtn_login" type="submit">
-            Login
-          </button>
-          <button class="accountBtn" id="accountBtn_account" type="submit">
+          <button class="Btn" id="accountBtn_login" type="submit">Login</button>
+          <button class="Btn" id="accountBtn_account" type="submit">
             Account
           </button>
-          <button class="accountBtn" id="accountBtn_logout" type="submit">
+          <button class="Btn" id="accountBtn_logout" type="submit">
             Logout
           </button>
         </nav>
       </div>
     </header>
-    <section class="addBook">
-      <button id="addBook" type="submit">+ Add Book</button>
-    </section>
-    <section class="grid">
+    <main class="container">
+      <button class="Btn" id="Btn_addBook" type="submit">+ Add book</button>
       <div class="grid-container"></div>
-    </section>
+    </main>
 
-    <div class="modal" id="addBookModal">
+    <div class="modal" id="bookModal">
       <div class="modalInside">
         <form id="bookForm">
           <legend>Add New Book</legend>
@@ -45,7 +41,7 @@
             placeholder="Title"
             required
           />
-          <div class="error" id="duplicateName">This book already exists</div>
+          <div class="error" id="duplicateName"></div>
           <br />
           <input
             type="text"
@@ -93,7 +89,7 @@
           </div>
           <br />
           <input
-            class="submitBtn"
+            class="Btn"
             type="submit"
             id="submitBtn_addBook"
             value="Add Book"
