@@ -101,7 +101,7 @@ const setupFormHandler = () => {
 const modal = document.getElementById("addBookModal");
 const modalBtn = document.getElementById("addBook");
 modalBtn.addEventListener("click", () => {
-  modal.style.display = "block";
+  modal.style.display = "flex";
 });
 
 const closeModal = (event) => {
