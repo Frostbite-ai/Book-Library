@@ -1,0 +1,223 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:wght@800&display=swap");
+
+body {
+  background: #f0eef1;
+  margin: 0px;
+  padding: 0px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+}
+
+header {
+  background-color: #fffbfb;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 4px;
+}
+
+header > div {
+  display: flex;
+  margin: 0 auto;
+  max-width: 1170px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+nav {
+  /* border: solid; */
+}
+
+#logo {
+  font-size: xx-large;
+  font-weight: 700;
+}
+
+#login {
+  font-weight: 500;
+  font-size: larger;
+  font-style: normal;
+  border-radius: 10px;
+  height: 100%;
+  border: none;
+  padding: 12px 18px;
+  transition: filter 0.2s ease-in-out;
+}
+
+#login:hover {
+  animation: normal;
+  filter: brightness(93%);
+}
+
+section[class="addBook"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 130px;
+}
+
+#addBook {
+  font-weight: 600;
+  background-color: transparent;
+  font-size: x-large;
+  font-style: normal;
+  background-color: #f0eef1;
+  border-radius: 10px;
+  border: none;
+  padding: 10px 20px;
+  transition: filter 0.15s ease-in-out;
+}
+#addBook:hover {
+  animation: normal;
+  filter: brightness(93%);
+}
+
+#addBookModal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /* overflow: auto; */
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+#addBookModalInside {
+  margin: 190px auto;
+  background-color: #f0eef1;
+  width: 280px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+}
+#bookForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+#duplicateName {
+  display: none;
+  color: red;
+  font-size: large;
+  padding-top: 5px;
+}
+legend {
+  font-weight: 700;
+  font-size: 21px;
+}
+
+input:not([type="radio"]):not([class="submitBtn"]) {
+  width: 100%;
+  height: 35px;
+  border-radius: 7px;
+  font-size: large;
+  font-weight: 550;
+  padding: 6px 10px;
+  border: none;
+}
+
+input:focus-visible {
+  outline: none;
+}
+
+.radioSection {
+  font-weight: 500;
+  font-size: medium;
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.radioSectionInside {
+  border-radius: 20px;
+  overflow: hidden;
+  display: inline-flex;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
+}
+
+.radio_input {
+  display: none;
+}
+
+.radio_label {
+  padding: 3px 12px;
+  background-color: #bfbbc2ba;
+  cursor: pointer;
+  transition: filter 0.15s ease-in-out;
+}
+
+.radio_label:hover {
+  filter: brightness(93%);
+}
+
+.radio_label:not(:last-of-type) {
+  border-right: 1px solid;
+}
+
+.radio_input:checked + .radio_label {
+  filter: brightness(80%);
+}
+
+.submitBtn {
+  color: rgb(27, 27, 27);
+  width: 100%;
+  height: 50px;
+  border-radius: 7px;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border: none;
+  word-wrap: break-word;
+  transition: filter 0.14s ease-in-out;
+  cursor: pointer;
+}
+
+.submitBtn:hover {
+  filter: brightness(93%);
+}
+
+.submitBtn#submitBtn_addBook {
+  background-color: #9fff9c;
+}
+
+.submitBtn#submitBtn_readStatusChange[value="Read"] {
+  background-color: #9fff9c;
+}
+
+.submitBtn#submitBtn_readStatusChange {
+  background-color: #ff9c9c;
+}
+
+section.grid {
+  padding: 20px;
+  max-width: 1170px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.grid-container {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+#gridCard {
+  font-size: larger;
+  font-weight: 500;
+  background-color: #fffbfb;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}

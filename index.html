@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Library</title>
+    <script src="books.js" async></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <header>
+      <div>
+        <h1 id="logo">The Library</h1>
+        <nav id="navbar">
+          <button id="login" type="submit">Login</button>
+        </nav>
+      </div>
+    </header>
+    <section class="addBook">
+      <button id="addBook" type="submit">+ Add Book</button>
+      <div id="addBookModal">
+        <div id="addBookModalInside">
+          <form id="bookForm">
+            <legend>Add New Book</legend>
+            <br />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Title"
+              required
+            />
+            <div class="error" id="duplicateName">This book already exists</div>
+            <br />
+            <input
+              type="text"
+              id="author"
+              name="author"
+              placeholder="Author"
+              required
+            />
+            <br />
+            <input
+              type="number"
+              id="pages"
+              name="pages"
+              placeholder="Pages"
+              required
+            />
+            <br />
+            <input
+              type="number"
+              id="year"
+              name="year"
+              placeholder="Publish Year"
+            />
+            <br />
+            <div class="radioSection">
+              <label id="text">Has been read?</label>
+              <div class="radioSectionInside">
+                <input
+                  class="radio_input"
+                  type="radio"
+                  id="yes"
+                  name="status"
+                  value="true"
+                />
+                <label class="radio_label" for="yes">Yes</label>
+                <input
+                  class="radio_input"
+                  type="radio"
+                  id="no"
+                  name="status"
+                  value="false"
+                />
+                <label class="radio_label" for="no">No </label>
+              </div>
+            </div>
+            <br />
+            <input
+              class="submitBtn"
+              type="submit"
+              id="submitBtn_addBook"
+              value="Add Book"
+            />
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="grid-container"></div>
+    </section>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyCUBOX7pAHlZ5B-6yMyYIzQloi3AVft4j8",
+        authDomain: "library-49cf6.firebaseapp.com",
+        projectId: "library-49cf6",
+        storageBucket: "library-49cf6.appspot.com",
+        messagingSenderId: "586311427699",
+        appId: "1:586311427699:web:8a0ae1da2ec028282d2c06",
+        measurementId: "G-88MJXRR68G",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+  </body>
+</html>
