@@ -49,6 +49,8 @@ nav {
 }
 
 .Btn {
+  color: var(--black);
+  /* font-weight: 500; */
   font-size: 20px;
   border-radius: 10px;
   border: none;
@@ -256,12 +258,30 @@ legend {
 
 @media (max-width: 500px) {
   #logo {
+    display: none;
+  }
+  #logo-phone {
     font-size: 30px;
     font-weight: 700;
+    display: block;
   }
 
   #navbar > .Btn {
     padding: 10px 16px;
+    background-color: rgba(210, 210, 210, 0.305);
+  }
+  .container:first-child {
+    padding: 0 15px 0 17px;
+  }
+  nav {
+    gap: 15px;
+  }
+  .Btn {
+    font-weight: 600;
+  }
+
+  #Btn_addBook {
+    background-color: rgba(210, 210, 210, 0.305);
   }
   /* .header .container {
     flex-direction: column;
