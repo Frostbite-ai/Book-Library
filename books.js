@@ -1,4 +1,4 @@
-const myLibrary = JSON.parse(localStorage.getItem("myLibrary")) || [];
+let myLibrary = JSON.parse(localStorage.getItem("myLibrary")) || [];
 
 class Book {
   constructor(name, author, pages, year, readStatus) {
@@ -16,26 +16,35 @@ const updateLibrary = () => {
 
 const duplicateNameError = document.getElementById("duplicateName");
 
-const addBookToLibrary = (event) => {
-  event.preventDefault();
+const getBookFromInput = (event) => {
   const formData = new FormData(event.target);
   const name = formData.get("name");
   const author = formData.get("author");
   const pages = formData.get("pages");
   const year = formData.get("year");
   const readStatus = formData.get("status") === "true";
-  for (let i = 0; i < myLibrary.length; i++) {
-    if (name === myLibrary[i].name) {
-      duplicateNameError.innerText = "This book already exists";
-      return;
-    }
+  return new Book(name, author, pages, year, readStatus);
+};
+
+const addBookToLibrary = (event) => {
+  event.preventDefault();
+  const newBook = getBookFromInput(event);
+  console.log(newBook);
+  if (myLibrary.some((book) => book.name === newBook.name)) {
+    duplicateNameError.textContent = "This book already exists";
+    return;
   }
-  duplicateNameError.innerText = "";
-  const newBook = new Book(name, author, pages, year, readStatus);
-  myLibrary.push(newBook);
-  updateLibrary();
-  displayBooks();
+  duplicateNameError.textContent = "";
+
+  if (auth.currentUser) {
+    addBookToLibraryDB(newBook);
+  } else {
+    myLibrary.push(newBook);
+    updateLibrary();
+    displayBooks();
+  }
   closeModal();
+  event.target.reset();
 };
 
 const displayBooks = () => {
@@ -52,17 +61,25 @@ const displayBooks = () => {
         <div> ${book.year} </div>
         <input type="button" class="Btn"  id="submitBtn_readStatusChange" value="${
           book.readStatus ? "Read" : "Not Read"
-        }"     data-index2="${i}">
-        <input type="button" class="Btn" id="removeBook_Btn" value="Remove" data-index="${i}">
+        }"     data-index2="${i}" data-title="${book.name}"  >
+        <input type="button" class="Btn" id="removeBook_Btn" value="Remove" data-title="${
+          book.name
+        }" data-index="${i}">
       </div>
     `;
     container.innerHTML += bookCard;
   }
+
   const removeButtons = document.querySelectorAll("#removeBook_Btn");
   removeButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
       const index = event.target.getAttribute("data-index");
-      removeBookFromLibrary(index);
+      const title = event.target.getAttribute("data-title");
+      if (auth.currentUser) {
+        removeBookFromLibraryDB(title);
+      } else {
+        removeBookFromLibrary(index);
+      }
     });
   });
 
@@ -72,7 +89,13 @@ const displayBooks = () => {
   updateReadStatusButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
       const index = event.target.getAttribute("data-index2");
-      updateReadStatus(index);
+      const title = event.target.getAttribute("data-title");
+
+      if (auth.currentUser) {
+        updateReadStatusDB(title);
+      } else {
+        updateReadStatus(index);
+      }
     });
   });
 };
@@ -89,30 +112,29 @@ const removeBookFromLibrary = (index) => {
   displayBooks();
 };
 
-const setupFormHandler = () => {
-  const form = document.getElementById("bookForm");
-  form.addEventListener("submit", addBookToLibrary);
-  displayBooks();
-  form.reset();
-  document.forms[0].reset();
-};
+const form = document.getElementById("bookForm");
+form.addEventListener("submit", addBookToLibrary);
 
 const bookModal = document.getElementById("bookModal");
 const modalInside = bookModal.querySelector(".modalInside");
 
-// const closeModal2 = () => {
-//   modalInside.style.transform = "scale(0)";
-//   setTimeout(() => {
-//     bookModal.classList.remove("show");
-//     bookModal.style.display = "none";
-//   }, 200);
-// };
-
-document.addEventListener("DOMContentLoaded", setupFormHandler);
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+  getDocs,
+  updateDoc,
+  getDoc,
+} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -139,6 +161,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 const loginBtn = document.getElementById("accountBtn_login");
@@ -147,22 +170,41 @@ const accountBtn = document.getElementById("accountBtn_account");
 const account_email = document.getElementById("account_email");
 
 const userLogin = async () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const user = result.user;
-      //   const user = "vaibhavmeena91@gmail.com";
-
-      const email = result.email;
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMsg = error.message;
-    });
+  signInWithPopup(auth, provider);
 };
+
 const userLogout = async () => {
-  signOut(auth).then(() => {});
+  await signOut(auth);
 };
 
+// const db = firebase.firestore();
+let unsubscribe;
+
+const setupRealTimeListener = () => {
+  if (!auth.currentUser) {
+    console.error("No authenticated user.");
+    return;
+  }
+
+  const booksCollection = collection(db, "books");
+  const booksQuery = query(
+    booksCollection,
+    where("ownerId", "==", auth.currentUser.uid),
+    orderBy("createdAt")
+  );
+
+  unsubscribe = onSnapshot(booksQuery, (snapshot) => {
+    const books = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    myLibrary = docsToBooks(books);
+    displayBooks();
+  });
+};
+const restoreLocalBooks = () => {
+  myLibrary = JSON.parse(localStorage.getItem("myLibrary")) || [];
+};
 onAuthStateChanged(auth, (user) => {
   if (user) {
     loginBtn.style.display = "none";
@@ -170,25 +212,117 @@ onAuthStateChanged(auth, (user) => {
     accountBtn.style.display = "block";
     account_email.innerHTML = user.email;
 
+    setupRealTimeListener();
+
     console.log(user);
     console.log(auth.currentUser.uid);
   } else {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+    restoreLocalBooks();
+    displayBooks();
+
     loginBtn.style.display = "block";
     logoutBtn.style.display = "none";
     accountBtn.style.display = "none";
   }
 });
 
-// const db = firebase.firestore();
-// let unsubscribe;
-// const setupRealTimeListener = () => {
-//   unsubscribe = db;
-// };
+const addBookToLibraryDB = async (newBook) => {
+  try {
+    await addDoc(collection(db, "books"), bookToDoc(newBook));
+    console.log("Book added successfully");
+  } catch (error) {
+    console.error("Error adding book: ", error);
+  }
+};
+
+const removeBookFromLibraryDB = async (title) => {
+  try {
+    console.log("book title  is for removing:", title);
+
+    const bookId = await getBookIdDB(title);
+    console.log("book id is for removing:", bookId);
+
+    if (bookId) {
+      await deleteDoc(doc(db, "books", bookId));
+      console.log("Book removed successfully");
+    } else {
+      console.log("Book not found");
+    }
+  } catch (error) {
+    console.error("Error removing book: ", error);
+  }
+};
+
+const updateReadStatusDB = async (title) => {
+  try {
+    // console.log("book title  is for updating:", title);
+    const bookId = await getBookIdDB(title);
+    // console.log("book id is for updating:", bookId);
+
+    if (bookId) {
+      const bookDoc = doc(db, "books", bookId);
+      const bookSnapshot = await getDoc(bookDoc);
+      if (bookSnapshot.exists()) {
+        const currentReadStatus = bookSnapshot.data().readStatus;
+        await updateDoc(bookDoc, {
+          readStatus: !currentReadStatus,
+        });
+        console.log("Book status updated successfully");
+      } else {
+        console.log("Book not found");
+      }
+    } else {
+      console.log("Book not found");
+    }
+  } catch (error) {
+    console.error("Error updating book status: ", error);
+  }
+};
+
+const docsToBooks = (docs) => {
+  return docs.map((data) => {
+    return new Book(
+      data.name,
+      data.author,
+      data.pages,
+      data.year,
+      data.readStatus
+    );
+  });
+};
+
+const bookToDoc = (book) => {
+  return {
+    ownerId: auth.currentUser.uid,
+    name: book.name,
+    author: book.author,
+    pages: book.pages,
+    year: book.year,
+    readStatus: book.readStatus,
+    createdAt: serverTimestamp(),
+  };
+};
+
+const getBookIdDB = async (title) => {
+  const q = query(
+    collection(db, "books"),
+    where("ownerId", "==", auth.currentUser.uid),
+    where("name", "==", title)
+  );
+  console.log("the query is :", q);
+  const snapshot = await getDocs(q);
+  console.log("the snapshot is :", snapshot);
+
+  const bookId = snapshot.docs.map((doc) => doc.id).join("");
+  return bookId;
+};
 
 const accountModal = document.getElementById("accountModal");
 const accountModal_Inside = accountModal.querySelector(".modalInside");
 
-// const bookModal = document.getElementById("bookModal");
 const bookModal_Btn = document.getElementById("Btn_addBook");
 const bookModal_Inside = bookModal.querySelector(".modalInside");
 
