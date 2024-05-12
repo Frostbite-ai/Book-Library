@@ -253,3 +253,27 @@ legend {
   flex-direction: column;
   gap: 13px;
 }
+
+@media (max-width: 500px) {
+  #logo {
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  #navbar > .Btn {
+    padding: 10px 16px;
+  }
+  /* .header .container {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+  }
+
+  .main {
+    margin-top: 0;
+  }
+
+  :root {
+    --spacing-xl: 20px;
+  } */
+}
